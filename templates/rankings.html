@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Rankings | CWE Secure Insight{% endblock %}
+{% block content %}
+<section class="card">
+  <h2>Ranked CWE analysis</h2>
+  <form method="get" class="filters">
+    <label>Search
+      <input type="text" name="q" maxlength="100" value="{{ filters.q }}">
+    </label>
+    <label>Minimum score
+      <input type="number" step="0.1" min="0" max="100" name="min_score" value="{{ filters.min_score }}">
+    </label>
+    <label>Abstraction
+      <select name="abstraction">
+        <option value="">Any</option>
+        {% for option in abstractions %}
+        <option value="{{ option }}" {% if filters.abstraction == option %}selected{% endif %}>{{ option }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Sort
+      <select name="sort">
+        {% for option in sorts %}
+        <option value="{{ option }}" {% if filters.sort == option %}selected{% endif %}>{{ option }}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Limit
+      <input type="number" min="1" max="200" name="limit" value="{{ filters.limit }}">
+    </label>
+    <label class="checkbox">
+      <input type="checkbox" name="top25_only" value="true" {% if filters.top25_only %}checked{% endif %}>
+      Top 25 only
+    </label>
+    <button class="button" type="submit">Apply</button>
+  </form>
+</section>
+
+<section class="card">
+  <h3>Results ({{ items|length }})</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>CWE</th>
+        <th>Name</th>
+        <th>Score</th>
+        <th>Abstraction</th>
+        <th>Top 25</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in items %}
+      <tr>
+        <td><a href="{{ url_for('cwe_detail', cwe_id=entry.cwe_id) }}">CWE-{{ entry.cwe_id }}</a></td>
+        <td>{{ entry.name }}</td>
+        <td>{{ entry.score.total }}</td>
+        <td>{{ entry.abstraction }}</td>
+        <td>{{ 'Yes' if entry.top25_member else 'No' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

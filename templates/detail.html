@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}CWE-{{ entry.cwe_id }} | CWE Secure Insight{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <h2>CWE-{{ entry.cwe_id }}: {{ entry.name }}</h2>
+    <p>{{ entry.description }}</p>
+  </div>
+  <div class="badge">Score {{ entry.score.total }}</div>
+</section>
+
+<section class="grid cards breakdown-grid">
+  <article class="card"><h3>Exploitability</h3><p>{{ entry.score.exploitability }}</p></article>
+  <article class="card"><h3>Consequence</h3><p>{{ entry.score.consequence }}</p></article>
+  <article class="card"><h3>Platform scope</h3><p>{{ entry.score.platform_scope }}</p></article>
+  <article class="card"><h3>Detection gap</h3><p>{{ entry.score.detection_gap }}</p></article>
+  <article class="card"><h3>Mitigation gap</h3><p>{{ entry.score.mitigation_gap }}</p></article>
+  <article class="card"><h3>Relationship density</h3><p>{{ entry.score.relationship_density }}</p></article>
+  <article class="card"><h3>Evidence signal</h3><p>{{ entry.score.evidence_signal }}</p></article>
+  <article class="card"><h3>Introduction breadth</h3><p>{{ entry.score.introduction_breadth }}</p></article>
+  <article class="card"><h3>Top 25 bonus</h3><p>{{ entry.score.top25_bonus }}</p></article>
+</section>
+
+<section class="card">
+  <h3>Derived rationale</h3>
+  <p>{{ entry.derived_rationale }}</p>
+</section>
+
+<section class="grid split">
+  <article class="card">
+    <h3>Structured attributes</h3>
+    <ul>
+      <li><strong>Likelihood:</strong> {{ entry.likelihood_of_exploit }}</li>
+      <li><strong>Scopes:</strong> {{ entry.scopes|join(', ') if entry.scopes else 'Not provided' }}</li>
+      <li><strong>Impacts:</strong> {{ entry.impacts|join(', ') if entry.impacts else 'Not provided' }}</li>
+      <li><strong>Introduction phases:</strong> {{ entry.modes_of_introduction|join(', ') if entry.modes_of_introduction else 'Not provided' }}</li>
+      <li><strong>Platform prevalence:</strong> {{ entry.platform_prevalence|join(', ') if entry.platform_prevalence else 'Not provided' }}</li>
+      <li><strong>Related weaknesses:</strong> {{ entry.related_weakness_count }}</li>
+      <li><strong>CAPEC links:</strong> {{ entry.related_attack_pattern_count }}</li>
+      <li><strong>Observed examples:</strong> {{ entry.observed_example_count }}</li>
+      <li><strong>Mapping usage:</strong> {{ entry.mapping_usage }}</li>
+      <li><strong>Top 25 member:</strong> {{ 'Yes' if entry.top25_member else 'No' }}</li>
+    </ul>
+  </article>
+  <article class="card">
+    <h3>Extended description</h3>
+    <p>{{ entry.extended_description if entry.extended_description else 'No extended description provided in the XML record.' }}</p>
+  </article>
+</section>
+{% endblock %}

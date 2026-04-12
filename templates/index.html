@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard | CWE Secure Insight{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <h2>Derived CWE prioritization dashboard</h2>
+    <p>This read-only web application parses the supplied CWE XML datasets, computes a derived threat insight score for each security-relevant weakness, and compares results with the official 2025 Top 25 overlay.</p>
+  </div>
+  <a class="button" href="{{ url_for('rankings') }}">Open rankings</a>
+</section>
+
+<section class="grid cards">
+  <article class="card"><h3>Catalog</h3><p>{{ metadata.name }}</p></article>
+  <article class="card"><h3>Version</h3><p>{{ metadata.version }}</p></article>
+  <article class="card"><h3>Scored entries</h3><p>{{ summary.entry_count }}</p></article>
+  <article class="card"><h3>Excluded entries</h3><p>{{ summary.excluded_count }}</p></article>
+  <article class="card"><h3>Average score</h3><p>{{ summary.average_score }}</p></article>
+  <article class="card"><h3>Top 25 in top 10</h3><p>{{ summary.top25_overlap_top10 }}</p></article>
+</section>
+
+<section class="grid split">
+  <article class="card">
+    <h3>Top security scopes</h3>
+    <ul>
+      {% for scope, count in summary.top_scopes %}
+      <li>{{ scope }} <strong>{{ count }}</strong></li>
+      {% endfor %}
+    </ul>
+  </article>
+  <article class="card">
+    <h3>Frequent introduction phases</h3>
+    <ul>
+      {% for phase, count in summary.top_modes_of_introduction %}
+      <li>{{ phase }} <strong>{{ count }}</strong></li>
+      {% endfor %}
+    </ul>
+  </article>
+</section>
+
+<section class="card">
+  <h3>Top 10 ranked weaknesses</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>CWE</th>
+        <th>Name</th>
+        <th>Score</th>
+        <th>Top 25</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entry in top_entries %}
+      <tr>
+        <td><a href="{{ url_for('cwe_detail', cwe_id=entry.cwe_id) }}">CWE-{{ entry.cwe_id }}</a></td>
+        <td>{{ entry.name }}</td>
+        <td>{{ entry.score.total }}</td>
+        <td>{{ 'Yes' if entry.top25_member else 'No' }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}
