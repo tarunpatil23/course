@@ -53,13 +53,6 @@ docker build -t cwe-secure-insight .
 docker run --rm -p 8000:8000 cwe-secure-insight
 ```
 
-## Useful screenshots for the report appendix
-- Home dashboard
-- Rankings page
-- One CWE detail page
-- Summary JSON at `/summary`
-- Terminal output from the `build-index` command
-
 ## CLI
 Build the index:
 ```bash
